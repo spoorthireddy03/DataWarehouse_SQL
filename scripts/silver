@@ -41,6 +41,8 @@ row_number() over(partition by cst_id order by cst_create_date desc) as rank_by_
 from bronze.crm_cust_info
 ) as t
 where rank_by_date = 1 and cst_id is not null;
+
+
 --prd_info
  create table silver.crm_prd_info(
  prd_id          INT,
@@ -79,5 +81,35 @@ INSERT INTO silver.crm_prd_info (
  cast(prd_start_dt as date) as prd_start_dt,
  cast(lead(prd_start_dt) over(partition by prd_key order by prd_start_dt) -1 as date) as prd_end_dt
  from bronze.crm_prd_info
- select * from silver.crm_prd_info;  
+ select * from silver.crm_prd_info;
+
+--cust_az12
+   CREATE TABLE silver.erp_cust_az12 (
+    cid    NVARCHAR(50),
+    bdate  DATE,
+    gen    NVARCHAR(50)
+);
+select * from silver.erp_cust_az12;
+INSERT INTO silver.erp_cust_az12 (
+			cid,
+			bdate,
+			gen
+		)
+        select
+case
+ when cid like 'nas%' then substring(cid,4,len(cid))
+ else cid
+ end  as cid,
+ case
+ when bdate > getdate() or bdate< '1925-10-17' then null
+ else bdate
+ end as bdate,
+ case
+ when upper(trim(gen)) in ('M' , 'MALE') THEN 'MALE'
+ when upper(trim(gen)) in ('F' , 'FEMALE') THEN 'FEMALE'
+ else 'n/a'
+ end as gen
+ from bronze.erp_cust_az12;
+
+--
 
