@@ -1,3 +1,4 @@
+--cust_info
 CREATE TABLE silver.crm_cust_info(
 cst_id INT,
 cst_key varchar(50),
@@ -40,4 +41,43 @@ row_number() over(partition by cst_id order by cst_create_date desc) as rank_by_
 from bronze.crm_cust_info
 ) as t
 where rank_by_date = 1 and cst_id is not null;
+--prd_info
+ create table silver.crm_prd_info(
+ prd_id          INT,
+    cat_id          NVARCHAR(50),
+    prd_key         NVARCHAR(50),
+    prd_nm          NVARCHAR(50),
+    prd_cost        INT,
+    prd_line        NVARCHAR(50),
+    prd_start_dt    DATE,
+    prd_end_dt      DATE,
+    dwh_create_date DATETIME2 DEFAULT GETDATE()
+);
+INSERT INTO silver.crm_prd_info (
+			prd_id,
+			cat_id,
+			prd_key,
+			prd_nm,
+			prd_cost,
+			prd_line,
+			prd_start_dt,
+			prd_end_dt
+		)
+		 select
+ prd_id,
+ replace(substring(prd_key,1,5),'-','_') as cat_id,
+ substring(prd_key,7,len(prd_key)) as prd_key,
+ prd_nm,
+ isnull(prd_cost,0) as prd_cost,
+ case
+ when upper(trim(prd_line)) = 'M' then 'Mountain'
+ when upper(trim(prd_line)) = 'R' then 'Road'
+ when upper(trim(prd_line)) = 'S' then 'Other sales'
+ when upper(trim(prd_line)) = 'T' then 'Touring'
+ else 'n/a'
+ end as prd_line,
+ cast(prd_start_dt as date) as prd_start_dt,
+ cast(lead(prd_start_dt) over(partition by prd_key order by prd_start_dt) -1 as date) as prd_end_dt
+ from bronze.crm_prd_info
+ select * from silver.crm_prd_info;  
 
