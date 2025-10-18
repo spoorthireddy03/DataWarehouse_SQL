@@ -1,2 +1,14 @@
 --crm_cust_info
+CREATE TABLE silver.crm_cust_info(
+cst_id INT,
+cst_key varchar(50),
+cst_firstname varchar(50),
+cst_lastname varchar(50),
+cst_marital_status varchar(50),
+cst_gndr varchar(50),
+cst_create_date date
+);
+select * from silver.crm_cust_info;
 
+
+--crm_prod_info
