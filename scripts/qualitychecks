@@ -1,8 +1,14 @@
 --primary key check
+
 select cst_id,count(*) from bronze.crm_cust_info
 group by cst_id
 having   count(cst_id) > 1 or  cst_id is null;
+
+
 --unwanted spaces check
+
 select cst_firstname from bronze.crm_cust_info
 where cst_firstname != trim(cst_firstname) 
 
+
+--
