@@ -48,6 +48,13 @@ create table silver.erp_loc_a101 (
 select  * from silver.erp_loc_a101;
 
 --erp_px_cat_g1v2
+CREATE TABLE silver.erp_px_cat_g1v2 (
+    id           NVARCHAR(50),
+    cat          NVARCHAR(50),
+    subcat       NVARCHAR(50),
+    maintenance  NVARCHAR(50)
+);
+select * from silver.erp_px_cat_g1v2;
 
 
 
