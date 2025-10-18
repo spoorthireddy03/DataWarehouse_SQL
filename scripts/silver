@@ -1,14 +1,5 @@
 --cust_info
-CREATE TABLE silver.crm_cust_info(
-cst_id INT,
-cst_key varchar(50),
-cst_firstname varchar(50),
-cst_lastname varchar(50),
-cst_marital_status varchar(50),
-cst_gndr varchar(50),
-cst_create_date date
-);
-select * from silver.crm_cust_info;
+
 INSERT INTO silver.crm_cust_info (
 			cst_id, 
 			cst_key, 
@@ -41,20 +32,11 @@ row_number() over(partition by cst_id order by cst_create_date desc) as rank_by_
 from bronze.crm_cust_info
 ) as t
 where rank_by_date = 1 and cst_id is not null;
+select * from silver.crm_cust_info;
 
 
 --prd_info
- create table silver.crm_prd_info(
- prd_id          INT,
-    cat_id          NVARCHAR(50),
-    prd_key         NVARCHAR(50),
-    prd_nm          NVARCHAR(50),
-    prd_cost        INT,
-    prd_line        NVARCHAR(50),
-    prd_start_dt    DATE,
-    prd_end_dt      DATE,
-    dwh_create_date DATETIME2 DEFAULT GETDATE()
-);
+ 
 INSERT INTO silver.crm_prd_info (
 			prd_id,
 			cat_id,
@@ -83,13 +65,9 @@ INSERT INTO silver.crm_prd_info (
  from bronze.crm_prd_info
  select * from silver.crm_prd_info;
 
+
 --cust_az12
-   CREATE TABLE silver.erp_cust_az12 (
-    cid    NVARCHAR(50),
-    bdate  DATE,
-    gen    NVARCHAR(50)
-);
-select * from silver.erp_cust_az12;
+
 INSERT INTO silver.erp_cust_az12 (
 			cid,
 			bdate,
@@ -110,12 +88,11 @@ case
  else 'n/a'
  end as gen
  from bronze.erp_cust_az12;
+ select * from silver.erp_cust_az12;
+
 
 --erp_loc_a101
-create table silver.erp_loc_a101 (
- cid    NVARCHAR(50),
-    cntry  NVARCHAR(50)
-);
+
 insert into silver.erp_loc_a101 (
 			cid,
 			cntry
